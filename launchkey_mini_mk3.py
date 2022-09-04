@@ -15,7 +15,8 @@ from novation.launchkey_drum_group import DrumGroupComponent
 from novation.launchkey_elements import SESSION_HEIGHT
 from novation.mode import ModesComponent
 from novation.novation_base import NovationBase
-from novation.simple_device import SimpleDeviceParameterComponent
+#from novation.simple_device import SimpleDeviceParameterComponent
+from .device import DeviceComponent
 from novation.transport import TransportComponent
 from novation.view_control import NotifyingViewControlComponent
 from . import midi
@@ -103,11 +104,19 @@ class Launchkey_Mini_MK3(InstrumentControlMixin, NovationBase):
         self._Launchkey_Mini_MK3__on_main_view_changed.subject = self.application.view
         self._select_recording_mode()
 
+    #def _create_device(self):
+        #self._device = SimpleDeviceParameterComponent(name='Device',
+          #is_enabled=False,
+          #layer=Layer(parameter_controls='pots'))
 
     def _create_device(self):
-        self._device = SimpleDeviceParameterComponent(name='Device',
+        self._device = DeviceComponent(name='Device',
           is_enabled=False,
-          layer=Layer(parameter_controls='pots'))
+          device_bank_registry=(self._device_bank_registry),
+          toggle_lock=(self.toggle_lock),
+          use_parameter_banks=True,
+          layer=Layer(device_lock_button='play_button_with_shift'))
+        self._device.set_enabled(True)
 
     def _create_drum_group(self):
         self._drum_group = DrumGroupComponent(name='Drum_Group',
@@ -157,12 +166,27 @@ class Launchkey_Mini_MK3(InstrumentControlMixin, NovationBase):
         self._pad_modes = ModesComponent(name='Pad_Modes',
           is_enabled=False,
           layer=Layer(mode_selection_control='pad_layout_switch'))
-        bg_mode = AddLayerMode((self._background),
+        suppress_scene_launch_buttons = AddLayerMode((self._background),
           layer=Layer(scene_launch_buttons='scene_launch_buttons'))
-        self._pad_modes.add_mode('custom', bg_mode)
-        self._pad_modes.add_mode('drum', (bg_mode, self._drum_group))
+        suppress_all_buttons_around_pads = AddLayerMode((self._background),
+          layer=Layer(scene_launch_buttons='scene_launch_buttons',
+          up_button='scene_launch_button_with_shift',
+          down_button='stop_solo_mute_button_with_shift'))
+        self._pad_modes.add_mode('dummy', suppress_all_buttons_around_pads)
+        self._pad_modes.add_mode('drum', (suppress_scene_launch_buttons, self._drum_group))
         self._pad_modes.add_mode('session', LayerMode((self._stop_solo_mute_modes),
           layer=Layer(cycle_mode_button=(self._elements.scene_launch_buttons_raw[1]))))
+        for i in range(6):
+            self._pad_modes.add_mode('custom{}'.format(i), suppress_all_buttons_around_pads)
+
+        upper_matrix_row = self._elements.device_select_matrix.submatrix[:, :1]
+        self._pad_modes.add_mode('device_select', (
+         suppress_scene_launch_buttons,
+         self._device.show_device_name_and_bank,
+         AddLayerMode((self._device),
+           layer=Layer(bank_select_buttons=upper_matrix_row,
+           prev_button='left_button',
+           next_button='right_button'))))
         self._pad_modes.selected_mode = 'session'
         self._pad_modes.set_enabled(True)
         self._Launchkey_Mini_MK3__on_pad_mode_changed.subject = self._pad_modes
