@@ -15,8 +15,7 @@ from novation.launchkey_drum_group import DrumGroupComponent
 from novation.launchkey_elements import SESSION_HEIGHT
 from novation.mode import ModesComponent
 from novation.novation_base import NovationBase
-#from novation.simple_device import SimpleDeviceParameterComponent
-from ableton.v2.control_surface.device import DeviceComponent
+from novation.simple_device import SimpleDeviceParameterComponent
 from novation.transport import TransportComponent
 from novation.view_control import NotifyingViewControlComponent
 from . import midi
@@ -104,24 +103,11 @@ class Launchkey_Mini_MK3(InstrumentControlMixin, NovationBase):
         self._Launchkey_Mini_MK3__on_main_view_changed.subject = self.application.view
         self._select_recording_mode()
 
-    # def _create_device(self):
-        #self._device = SimpleDeviceParameterComponent(name='Device',
-          #is_enabled=False,
-          #layer=Layer(parameter_controls='pots'))
 
     def _create_device(self):
-        self._device = DeviceComponent(name='Device',
+        self._device = SimpleDeviceParameterComponent(name='Device',
           is_enabled=False,
-          show_notification=(self._notification_component.show_notification),
-          device_bank_registry=(self._device_bank_registry),
-          toggle_lock=(self.toggle_lock),
-          use_parameter_banks=True,
-          layer=Layer(parameter_controls='pots',
-          prev_track_button='left_button',
-          next_track_button='right_button',
-          device_lock_button='play_button_with_shift'))
-        self._device.set_enabled(True)
-          
+          layer=Layer(parameter_controls='pots'))
 
     def _create_drum_group(self):
         self._drum_group = DrumGroupComponent(name='Drum_Group',
