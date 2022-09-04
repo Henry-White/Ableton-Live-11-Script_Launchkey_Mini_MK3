@@ -10,7 +10,6 @@ from ableton.v2.control_surface import Skin, merge_skins
 # from novation.colors import Mono, Rgb, Blink
 from .colors import Mono, Rgb
 from novation.skin import skin as base_skin
-# from ableton.v2.control_surface.elements import AnimatedColor, Color
 
 class Colors(object):
 
