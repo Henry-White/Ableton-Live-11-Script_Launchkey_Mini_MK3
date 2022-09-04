@@ -58,6 +58,7 @@ class Rgb(object):
     PALE_GREEN_HALF = Color(89)
     YELLOW = Color(97)
     YELLOW_HALF = Color(125)
+    YELLOW_BLINK = Blink(color1=BLACK, color2=YELLOW)
 
 
 class Mono(object):

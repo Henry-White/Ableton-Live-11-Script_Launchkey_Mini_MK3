@@ -7,10 +7,10 @@
 from __future__ import absolute_import, print_function, unicode_literals
 from builtins import object
 from ableton.v2.control_surface import Skin, merge_skins
-#from novation.colors import Mono, Rgb, Blink
+# from novation.colors import Mono, Rgb, Blink
 from .colors import Mono, Rgb
 from novation.skin import skin as base_skin
-#from ableton.v2.control_surface.elements import AnimatedColor, Color
+# from ableton.v2.control_surface.elements import AnimatedColor, Color
 
 class Colors(object):
 
@@ -23,6 +23,10 @@ class Colors(object):
     class TrackNavigation(object):
         On = Mono.HALF
         Pressed = Mono.ON
+
+    class Device:
+        Navigation = Rgb.PURPLE_HALF
+        NavigationPressed = Rgb.PURPLE
 
     class SceneNavigation(object):
         On = Mono.HALF

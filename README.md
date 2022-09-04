@@ -5,7 +5,11 @@ This is the MIDI Remote Scripts for Launchkey Mini MK3 for Ableton Live 11.
 * Change colors for button `Stop Solo Mute` modes.
 * Add navigation with `Track left and Right buttons` for `Device` mode.
 
-## History:
+## History:  
 ### 2022-09-03
-* Added function `Arm Track` for button `Stop Solo Mute` as 4th mode;
+* Added function `Arm Track` for button `Stop Solo Mute` as 4th mode;  
 
+### 2022-09-04
+Change color for:
+* `Mute` to ORANGE;
+* `StopClip` to YELLOW
