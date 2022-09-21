@@ -77,5 +77,13 @@ class Colors(object):
         TrackSelected = Rgb.WHITE
         TrackNotSelected = Rgb.WHITE_HALF
 
+    class Mode:
+
+        class Device:
+
+            class Bank:
+                Selected = Rgb.PURPLE
+                Available = Rgb.PURPLE_HALF
+
 
 skin = merge_skins(*(base_skin, Skin(Colors)))

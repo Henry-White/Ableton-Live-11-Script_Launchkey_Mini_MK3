@@ -16,11 +16,11 @@ from novation.launchkey_elements import SESSION_HEIGHT
 from novation.mode import ModesComponent
 from novation.novation_base import NovationBase
 #from novation.simple_device import SimpleDeviceParameterComponent
-from .device import DeviceComponent
 from novation.transport import TransportComponent
 from novation.view_control import NotifyingViewControlComponent
 from . import midi
 from . import sysex_ids as ids
+from .device import DeviceComponent
 from .elements import Elements
 from .skin import skin
 DRUM_FEEDBACK_CHANNEL = 1
@@ -59,7 +59,8 @@ class Launchkey_Mini_MK3(InstrumentControlMixin, NovationBase):
     def _create_components(self):
         super(Launchkey_Mini_MK3, self)._create_components()
         self.register_slot(self._elements.incontrol_mode_switch, nop, 'value')
-        self._background = BackgroundComponent(name='Background', add_nop_listeners=True)
+        #self._background = BackgroundComponent(name='Background', add_nop_listeners=True)
+        self._create_background()
         self._create_auto_arm()
         self._create_view_control()
         self._create_transport()
@@ -79,6 +80,16 @@ class Launchkey_Mini_MK3(InstrumentControlMixin, NovationBase):
 
     def _create_auto_arm(self):
         self._auto_arm = AutoArmComponent(name='Auto_Arm', is_enabled=False)
+
+    def _create_background(self):
+        self._background = BackgroundComponent(name='Background',
+          is_enabled=False,
+          add_nop_listeners=True,
+          layer=Layer(secondary_up_button='scene_launch_button_with_shift',
+          secondary_down_button='stop_solo_mute_button_with_shift',
+          device_select_button='play_button_with_shift',
+          unused_matrix=(self._elements.device_select_matrix.submatrix[:, 1:])))
+        self._background.set_enabled(True)
 
     def _create_view_control(self):
         self._view_control = NotifyingViewControlComponent(name='Track_Scroller',
@@ -115,7 +126,7 @@ class Launchkey_Mini_MK3(InstrumentControlMixin, NovationBase):
           device_bank_registry=(self._device_bank_registry),
           toggle_lock=(self.toggle_lock),
           use_parameter_banks=True,
-          layer=Layer(device_lock_button='play_button_with_shift'))
+          layer=Layer(parameter_controls='pots', device_lock_button='play_button_with_shift'))
         self._device.set_enabled(True)
 
     def _create_drum_group(self):
